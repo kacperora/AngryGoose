@@ -15,13 +15,10 @@ namespace AngryGoose
         public Form1()
         {
             InitializeComponent();
-            this.WindowState = FormWindowState.Maximized;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.BackgroundImage = new Bitmap(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\Microsoft\Windows\Themes\TranscodedWallpaper");
-
-
+            WindowState = FormWindowState.Maximized;
+            FormBorderStyle = FormBorderStyle.None;
+            BackgroundImage = new Bitmap(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)+@"\Microsoft\Windows\Themes\TranscodedWallpaper");
             Goose.BringToFront();
-
         }
         
         private void GooseGotYou()
@@ -78,9 +75,10 @@ namespace AngryGoose
                 var gif = Properties.Resources.image_processing20200917_21316_1ovdnp0;
                 Goose.Image = gif;
                 timer1.Start();
-#pragma warning disable CS8602 // Wyluskanie odwolania, ktore moze miec wartosc null.
-                simpleSound.Stop();
-#pragma warning restore CS8602 // Wyluskanie odwolania, ktore moze miec wartosc null.
+                if (simpleSound is not null)
+                {
+                    simpleSound.Stop();
+                }
             }
             else
             {
