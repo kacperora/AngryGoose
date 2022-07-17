@@ -7,11 +7,11 @@ namespace AngryGoose
 {
     public partial class Form1 : Form
     {
-        SoundPlayer simpleSound;
+        SoundPlayer? simpleSound;
         private const double speed = 10;
-        private double speed2 = 10;
-        private double difficulty = 100;
-        private int lastx = 0;
+        private readonly double speed2 = 10;
+        private readonly double difficulty = 100;
+        //private int lastx = 0;
         public Form1()
         {
             InitializeComponent();
@@ -21,7 +21,6 @@ namespace AngryGoose
 
 
             Goose.BringToFront();
-            var bmp = Goose.Image;
 
         }
         
@@ -36,7 +35,7 @@ namespace AngryGoose
             try
             {
                 simpleSound.PlayLooping();
-            } catch (Exception ex)
+            } catch (Exception)
             {
 
             }
@@ -44,7 +43,7 @@ namespace AngryGoose
 
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1_Tick(object sender, EventArgs e)
         {
             var x = Goose.PointToScreen(Point.Empty).X+Goose.Width/2;
             var y = Goose.PointToScreen(Point.Empty).Y+Goose.Height/2;
@@ -57,7 +56,7 @@ namespace AngryGoose
                // Goose.Image = Properties.Resources.image_processing20200917_21316_1ovdnp0;
                 //Goose.Image.RotateFlip(RotateFlipType.RotateNoneFlipX);
             //} 
-            lastx = dx;
+            //lastx = dx;
             var dy = (int)(Math.Ceiling((Math.Sin(angle) * speed)));
             Goose.Location = new Point(x+dx-Goose.Width/2, y+dy-Goose.Height/2);
             if(x-Goose.Width/2 <= cursor.X && cursor.X <= x+Goose.Width/2 && y-Goose.Height/2 <= cursor.Y && cursor.Y <= y +Goose.Height/2)
@@ -67,7 +66,7 @@ namespace AngryGoose
             
         }
 
-        private void timer2_Tick(object sender, EventArgs e)
+        private void Timer2_Tick(object sender, EventArgs e)
         {
             Point pos = Cursor.Position;
             var x = Goose.PointToScreen(Point.Empty).X + Goose.Width / 2;
@@ -79,7 +78,9 @@ namespace AngryGoose
                 var gif = Properties.Resources.image_processing20200917_21316_1ovdnp0;
                 Goose.Image = gif;
                 timer1.Start();
+#pragma warning disable CS8602 // Wyluskanie odwolania, ktore moze miec wartosc null.
                 simpleSound.Stop();
+#pragma warning restore CS8602 // Wyluskanie odwolania, ktore moze miec wartosc null.
             }
             else
             {
