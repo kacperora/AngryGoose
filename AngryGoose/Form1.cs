@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Media;
 using System.Runtime.InteropServices;
 
@@ -7,6 +8,7 @@ namespace AngryGoose
 {
     public partial class Form1 : Form
     {
+        bool rickrolled = false;
         SoundPlayer? simpleSound;
         private const double speed = 10;
         private readonly double speed2 = 10;
@@ -40,6 +42,34 @@ namespace AngryGoose
 
         }
 
+        private void OpenUrl(string url)
+        {
+            try
+            {
+                Process.Start(url);
+            }
+            catch
+            {
+                // hack because of this: https://github.com/dotnet/corefx/issues/10361
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    url = url.Replace("&", "^&");
+                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    Process.Start("xdg-open", url);
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    Process.Start("open", url);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
         private void Timer1_Tick(object sender, EventArgs e)
         {
             var x = Goose.PointToScreen(Point.Empty).X+Goose.Width/2;
@@ -75,6 +105,7 @@ namespace AngryGoose
                 var gif = Properties.Resources.image_processing20200917_21316_1ovdnp0;
                 Goose.Image = gif;
                 timer1.Start();
+                rickrolled = false;
                 if (simpleSound is not null)
                 {
                     simpleSound.Stop();
@@ -83,14 +114,22 @@ namespace AngryGoose
             else
             {
                 Point target;
-                target = this.Location;
+                target = Location;
                 if (Math.Sqrt(Math.Pow(target.X - x, 2) + Math.Pow(target.Y - y, 2) * 1.0) > speed2)
                 {
                     double angle = Math.Atan2(target.Y - y, target.X - x);
                     var dx = (int)(Math.Ceiling((Math.Cos(angle) * speed2)));
                     var dy = (int)(Math.Ceiling((Math.Sin(angle) * speed2)));
                     Goose.Location = new Point(x + dx - Goose.Width / 2, y + dy - Goose.Height / 2);
+                } else
+                {
+                    if (!rickrolled)
+                    {
+                        rickrolled = true;
+                        OpenUrl("https://youtu.be/dQw4w9WgXcQ");
+                    }
                 }
+
                 Cursor.Position = Goose.Location;
             }
         }
